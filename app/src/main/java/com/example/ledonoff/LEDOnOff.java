@@ -31,7 +31,7 @@ public class LEDOnOff extends Activity {
       UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
   // Insert your bluetooth devices MAC address
-  private static String address = "20:13:12:02:10:94";
+  private static String address = "00:00:00:00:00:00";
 
   /**
    * Called when the activity is first created.
@@ -46,6 +46,11 @@ public class LEDOnOff extends Activity {
 
     btnOn = (Button) findViewById(R.id.btnOn);
     btnOff = (Button) findViewById(R.id.btnOff);
+
+    if (address.equals("00:00:00:00:00:00")) {
+      String msg = "Update your server address from 00:00:00:00:00:00 to the correct address on line 34 in the java code";
+      errorExit("Fatal Error", msg);
+    }
 
     btAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -160,9 +165,7 @@ public class LEDOnOff extends Activity {
 
   private void errorExit(String title, String message) {
     Log.d(TAG, "In errorExit...  " + message);
-    Toast msg = Toast.makeText(getBaseContext(),
-        title + " - " + message, Toast.LENGTH_SHORT);
-    msg.show();
+    Toast.makeText(getBaseContext(), title + " - " + message, Toast.LENGTH_LONG).show();
     finish();
   }
 
@@ -175,8 +178,6 @@ public class LEDOnOff extends Activity {
       outStream.write(msgBuffer);
     } catch (IOException e) {
       String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
-      if (address.equals("00:00:00:00:00:00"))
-        msg = msg + ".\n\nUpdate your server address from 00:00:00:00:00:00 to the correct address on line 37 in the java code";
       msg = msg + ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on server.\n\n";
 
       errorExit("Fatal Error", msg);
